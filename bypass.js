@@ -12,9 +12,14 @@ module.exports = {
 
     }
   };
-  
+  //General use functions
 
   function testregex(string, regex) {
     var reg = new RegExp(regex);
     return(reg.test(string))
+  }
+
+  //Bypass functions
+  function linkvertise_BYPASS(url) {
+      
   }
