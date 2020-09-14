@@ -5,7 +5,7 @@ const port = process.env.PORT || 3000;
 var bypasser = require('./bypass');
 
 app.get('/api', (req, res) => {
-    var urltobypass = req.query.url;
+    var urltobypass = decodeURI(req.query.url);
 
     res.end(bypasser.bypass(urltobypass))
 })
