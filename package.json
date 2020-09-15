@@ -15,5 +15,11 @@
   "bugs": {
     "url": "https://github.com/codergautam/linkunshortener/issues"
   },
-  "homepage": "https://github.com/codergautam/linkunshortener#readme"
+  "homepage": "https://github.com/codergautam/linkunshortener#readme",
+  "dependencies": {
+    "atob": "^2.1.2",
+    "btoa": "^1.2.1",
+    "request": "^2.88.2",
+    "requests": "^0.3.0"
+  }
 }
