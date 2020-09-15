@@ -17,7 +17,9 @@ function change(url) {
   var done2 = "https://link-to.net"+done1
   return done2;
   }
-
+app.get('/', (req,res) => {
+  res.end("Linkunshortener")
+})
 app.get('/api', (req, res) => {
     var url11 = decodeURI(req.url.substring(9));
     var output = {
