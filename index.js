@@ -5,6 +5,13 @@ const request = require('request');
 const btoa = require('btoa');
 var atob = require('atob');
 
+let allowCrossDomain = function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', "*");
+  res.header('Access-Control-Allow-Headers', "*");
+  next();
+}
+app.use(allowCrossDomain);
+
 function testregex(string, regex) {
   var reg = new RegExp(regex);
   return(reg.test(string))
