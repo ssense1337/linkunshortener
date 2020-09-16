@@ -5,6 +5,8 @@ const request = require('request');
 const btoa = require('btoa');
 var atob = require('atob');
 var urlExpander=require('expand-url');
+const { json } = require('express');
+var Bypasser = require('node-bypasser');
 
 let allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', "*");
@@ -173,10 +175,51 @@ bypassed = atob(decodeURIComponent(url.substr(url.indexOf("?r=") + 3)));
   }
 
 });
-    } else {
-     output.success = false;
-     output.errormsg = "Invalid URL/Website not available for unshorten"
-     res.end(JSON.stringify(output))
+    } else if(testregex(url11,  "/bit\.ly/")) {
+      output.type = "Bit.ly"
+      var w = new Bypasser(url11);
+      try {
+      w.decrypt(function(err, result) {
+if(err) {
+  output.success = false;
+  output.errormsg = err
+  res.end(JSON.stringify(output))
+} else {
+  output.success = true;
+  output.bypassedlink = result;
+  res.end(JSON.stringify(output))
+}
+
+    
+    });
+  } catch {
+    output.success = false
+    output.errormsg = "Unexpected error"
+    res.end(JSON.stringify(output))
+  }
+     } else {
+      var w = new Bypasser(url11);
+      try {
+        w.decrypt(function(err, result) {
+  if(err) {
+    output.success = false;
+    output.errormsg = "Invalid URL/Website not available for unshorten"
+    res.end(JSON.stringify(output))
+  } else {
+    output.success = true;
+    output.type = "Misc Link"
+    output.bypassedlink = result;
+    res.end(JSON.stringify(output))
+  }
+  
+      
+      });
+    } catch {
+      output.success = false
+      output.errormsg = "Unexpected error"
+      res.end(JSON.stringify(output))
+    }
+
 
     }
 })
