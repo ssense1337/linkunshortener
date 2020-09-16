@@ -11,6 +11,8 @@ let allowCrossDomain = function(req, res, next) {
   next();
 }
 app.use(allowCrossDomain);
+app.use(express.static(__dirname+"/website"))
+
 
 function testregex(string, regex) {
   var reg = new RegExp(regex);
@@ -25,7 +27,7 @@ function change(url) {
   return done2;
   }
 app.get('/', (req,res) => {
-  res.end("Linkunshortener")
+  res.sendFile("index.html")
 })
 app.get('/api', (req, res) => {
     var url11 = decodeURI(req.url.substring(9));
@@ -37,7 +39,7 @@ app.get('/api', (req, res) => {
       type: undefined
     };
 
-    if(testregex(url11, "/linkvertise\.(com|net)|link-to\.net|up-to-down\.net|direct-link\.net|filemedia\.net|linkvertise\.download/")) {
+    if(testregex(url11, "/linkvertise\.(com|net)|link-to\.net|up-to-down\.net|direct-link\.net|filemedia\.net|linkvertise\.download|file-link\.net/")) {
       //LINKVERTISE
       output.type = "Linkvertise" 
       var urltest = url11;
@@ -144,7 +146,7 @@ bypassed = atob(decodeURIComponent(url.substr(url.indexOf("?r=") + 3)));
                 }
     } else {
      output.success = false;
-     output.errormsg = "Website not available for bypasses yet"
+     output.errormsg = "Invalid URL/Website not available for unshorten"
      res.end(JSON.stringify(output))
 
     }

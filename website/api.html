@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+
+  <meta charset="utf-8">
+  <meta name="generator"/>
+  <META HTTP-EQUIV="CACHE-CONTROL" CONTENT="NO-CACHE">
+<META HTTP-EQUIV="EXPIRES" CONTENT="Mon, 22 Jul 2002 11:12:01 GMT">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+  <style>
+  input,button { font-size: 30px; } 
+.container {
+    left: 0;
+    margin-top: -100px;
+    position: absolute;
+    text-align: center;
+    top: 50%;
+    width: 100%;
+}
+div.fixed {
+  position: fixed;
+  bottom: 0;
+  right: 0;
+  width: 200px;
+}
+ 
+  </style>
+  <title>Linkvertise Bypasser</title>
+
+</head>
+<body>
+<center>
+    
+<h1>Link-Unshortener</h1><h3>API</h3><br>
+<h4><b>How it works</b></h4>
+<p>Send a GET request to our API</p>
+<code>https://linkunshortener.herokuapp.com/api?url=&lt;URL_GOES_HERE&gt;</code><br>
+<p>And you will get an object response</p>
+<code>
+
+        {
+            success: boolean,
+            errormsg: string,
+            bypassedlink: string,
+            inputlink: string,
+            type: string
+          }
+    
+</code>
+<p>What these mean</p>
+
+<li> success= a true or false value representing if the bypass was successfull </li>
+<li>  errormsg= a string which returns "" if no error or if there is an error it will be the error message </li>
+<li>  bypassedlink= a string which returns the bypassed link. returns undefined if error </li>
+<li>   inputlink= a string which contains the input link to bypass </li>
+<li>   type= a string which contains the service that was bypassed. returns undefined if cannot be determined </li>
+
+<br>
+<h3>Have any questions about our API?<br><a href="https://discord.gg/2scjJ4x">Join our discord server!</a></h3>
+
+
+<div class="fixed">
+<h3>
+    <a href="index.html">Home</a>
+    <br>
+    <a href="https://discord.gg/2scjJ4x">Discord</a>
+    <br>
+    <a href="https://github.com/codergautam/linkunshortener">Github</a>
+</h3>
+</div>
+</center>
+
+
+</body>
+</html>
