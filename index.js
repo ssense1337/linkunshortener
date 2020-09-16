@@ -4,6 +4,7 @@ const port = process.env.PORT || 3000;
 const request = require('request');
 const btoa = require('btoa');
 var atob = require('atob');
+var urlExpander=require('expand-url');
 
 let allowCrossDomain = function(req, res, next) {
   res.header('Access-Control-Allow-Origin', "*");
@@ -144,6 +145,30 @@ bypassed = atob(decodeURIComponent(url.substr(url.indexOf("?r=") + 3)));
                   output.bypassedlink = bypassed
                   res.end(JSON.stringify(output))
                 }
+    } else if(testregex(url11, "/goo\.gl/")) {
+      output.type = "Goo.gl" 
+      urlExpander.expand(url11, function(err, longUrl){
+	if(err) {
+    output.success = false;
+    output.errormsg = "Error"
+    res.end(JSON.stringify(output))
+  }
+  var oldobj = new URL(url11)
+  var newobj = new URL(longUrl)
+
+  var oldurl = oldobj.host+oldobj.pathname
+  var newurl = newobj.host+newobj.pathname
+  if(oldurl == newurl) {
+    output.success = false;
+    output.errormsg = "Invalid Link"
+    res.end(JSON.stringify(output))
+  } else {
+    output.success = true;
+    output.bypassedlink = longUrl;
+        res.end(JSON.stringify(output))
+  }
+
+});
     } else {
      output.success = false;
      output.errormsg = "Invalid URL/Website not available for unshorten"
