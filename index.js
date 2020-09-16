@@ -40,6 +40,10 @@ app.get('/api', (req, res) => {
       type: undefined
     };
 
+    if(url11.slice(-1) == "/") {
+      url11 = url11.substring(0, url11.length - 1)
+    }
+
     if(testregex(url11, "/linkvertise\.(com|net)|link-to\.net|up-to-down\.net|direct-link\.net|filemedia\.net|linkvertise\.download|file-link\.net/")) {
       //LINKVERTISE
       output.type = "Linkvertise" 
