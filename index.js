@@ -197,6 +197,90 @@ if(err) {
     output.errormsg = "Unexpected error"
     res.end(JSON.stringify(output))
   }
+     } else if(testregex(url11,  "/adf\.ly|raboninco\.com/")) {
+
+      output.type = "Adf.ly(beta)"
+      request(url11, function (error, response, body) {
+   if(!error) {
+       
+        var data = body.substring(body.indexOf('ysmm = \''), body.length)
+ try {
+     eval(data.substring(0,data.indexOf(";")))
+     failed = false;
+ } catch {
+ //invalid
+ failed = true;
+ output.success = false;
+ output.errormsg = "Invalid Adfly URL"
+ res.end(JSON.stringify(output))
+ }
+ if(!failed) {
+        r=ysmm
+ 
+        let a,m,I="",X=""
+        for(m=0;m<r.length;m++)
+        {
+            if(m%2==0)
+            {
+                I+=r.charAt(m)
+            }
+            else
+            {
+                X=r.charAt(m)+X
+            }
+        }
+        r=I+X
+        a=r.split("")
+        for(m=0;m<a.length;m++)
+        {
+            if(!isNaN(a[m]))
+            {
+                for(var R=m+1;R<a.length;R++)
+                {
+                    if(!isNaN(a[R]))
+                    {
+                        let S=a[m]^a[R]
+                        if(S<10)
+                        {
+                            a[m]=S
+                        }
+                        m=R
+                        R=a.length
+                    }
+                }
+            }
+        }
+        r=a.join('')
+        r=atob(r)
+        r=r.substring(r.length-(r.length-16))
+        r=r.substring(0,r.length-16)
+    try {
+ bypassed = decodeURIComponent(new URL(r).searchParams.get("dest"))
+    } catch {
+      failed = true;
+      output.success = false
+      output.errormsg =  "Unexpected Error"
+      res.end(JSON.stringify(output))
+    }
+if(!failed) {
+  if(bypassed != null) {
+    output.success = true
+    output.bypassedlink =  bypassed
+    res.end(JSON.stringify(output))
+  } else {
+    output.success = false
+    output.errormsg =  "Couldnt retrieve bypassed URL"
+    res.end(JSON.stringify(output))
+  }
+}
+       
+      } else {
+        output.success = false;
+        output.errormsg = "Could not fetch data"
+        res.end(JSON.stringify(output))
+      }
+     }
+       });
      } else {
       var w = new Bypasser(url11);
       try {
