@@ -48,7 +48,7 @@ app.get('/api', (req, res) => {
     }
     if(url11 == "") {
       output.success = false;
-      output.errormsg = "No URl Given Lol"
+      output.errormsg = "No URL Given Lol"
       res.end(JSON.stringify(output))
     }
     try {
