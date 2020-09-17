@@ -34,6 +34,7 @@ app.get('/', (req,res) => {
 })
 app.get('/api', (req, res) => {
     var url11 = decodeURI(req.url.substring(9));
+
     var output = {
       success: undefined,
       errormsg: undefined,
@@ -44,6 +45,18 @@ app.get('/api', (req, res) => {
 
     if(url11.slice(-1) == "/") {
       url11 = url11.substring(0, url11.length - 1)
+    }
+    if(url11 == "") {
+      output.success = false;
+      output.errormsg = "No URl Given Lol"
+      res.end(JSON.stringify(output))
+    }
+    try {
+      new URL(url11)
+    } catch {
+      output.success = false;
+      output.errormsg = "Invalid URL"
+      res.end(JSON.stringify(output))
     }
 
     if(testregex(url11, "/linkvertise\.(com|net)|link-to\.net|up-to-down\.net|direct-link\.net|filemedia\.net|linkvertise\.download|file-link\.net/")) {
@@ -317,7 +330,7 @@ if(!failed) {
         w.decrypt(function(err, result) {
   if(err) {
     output.success = false;
-    output.errormsg = "Invalid URL/Website not available for unshorten"
+    output.errormsg = "This website is not supported"
     res.end(JSON.stringify(output))
   } else {
     output.success = true;
