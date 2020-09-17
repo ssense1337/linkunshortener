@@ -197,7 +197,7 @@ if(err) {
     output.errormsg = "Unexpected error"
     res.end(JSON.stringify(output))
   }
-     } else if(testregex(url11,  "/adf\.ly|raboninco\.com/")) {
+     } else if(testregex(url11,  "/adf\.ly|raboninco\.com|dapalan\.com|gdanstum\.net|ducolomal\.com/")) {
 
       output.type = "Adf.ly(beta)"
       request(url11, function (error, response, body) {
@@ -263,7 +263,8 @@ if(err) {
       res.end(JSON.stringify(output))
     }
 if(!failed) {
-  if(bypassed != null) {
+  if(!(bypassed === "null")) {
+    console.log(bypassed)
     output.success = true
     output.bypassedlink =  bypassed
     res.end(JSON.stringify(output))
@@ -282,6 +283,9 @@ if(!failed) {
      }
        });
      } else {
+
+
+
       var w = new Bypasser(url11);
       try {
         w.decrypt(function(err, result) {
