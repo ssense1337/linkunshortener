@@ -197,7 +197,7 @@ if(err) {
     output.errormsg = "Unexpected error"
     res.end(JSON.stringify(output))
   }
-     } else if(testregex(url11,  "/adf\.ly|raboninco\.com|dapalan\.com|gdanstum\.net|ducolomal\.com/")) {
+     } else if(testregex(url11,  "/adf\.ly|raboninco\.com|dapalan\.com|gdanstum\.net|ducolomal\.com|aclabink\.com|yoitect\.com|yoineer\.com|yamechanic\.com|skamason\.com|skamaker\.com|kializer\.com|flyserve\.co|fawright\.com/")) {
 
       output.type = "Adf.ly(beta)"
       request(url11, function (error, response, body) {
