@@ -282,6 +282,32 @@ if(!failed) {
       }
      }
        });
+     } else if(testregex(url11,  "/sub2unlock\.(com|net)/")) {
+      output.type = "sub2unlock"
+      request(url11, function (error, response, body) {
+try {
+new URL(body.substring(body.indexOf('<div id="theGetLink" style="display: none">')).substring(43,body.substring(body.indexOf('<div id="theGetLink" style="display: none">')).indexOf('</div>')))
+failed = false;
+} catch {
+  output.success = false;
+  output.errormsg = "Invalid Sub2unlock link"
+  res.end(JSON.stringify(output))
+  failed = true;
+}
+if(!failed) {
+  if(body.indexOf('<meta property="og:description" content="The page you are looking for cannot be found anywhere. Please try again or contact us for more info." />') == -1) {
+  output.success = true;
+  output.bypassedlink = body.substring(body.indexOf('<div id="theGetLink" style="display: none">')).substring(43,body.substring(body.indexOf('<div id="theGetLink" style="display: none">')).indexOf('</div>'));
+  res.end(JSON.stringify(output))
+  } else {
+    output.success = false;
+    output.errormsg = "Sub2unlock link not found"
+    res.end(JSON.stringify(output))
+    failed = true;
+  }
+}
+       
+      })
      } else {
 
 
