@@ -321,6 +321,27 @@ if(!failed) {
 }
        
       })
+     } else if(testregex(url11,  "/mboost\.me/")) {
+      output.type = "mboost.me"
+      request(url11, function (error, response, body) {
+        var data = body.substring(body.indexOf('<script id="__NEXT_DATA__" type="application/json">'))
+        var data2 = data.substring(51, data.indexOf('</script>'))
+        failed = false;
+        try {
+          JSON.parse(data2)
+        
+        } catch {
+          failed =true;
+          output.success = false;
+          output.errormsg = "Cannot read bypassed link";
+          res.end(JSON.stringify(output))
+        }
+        if(!failed) {
+          output.success = true;
+          output.bypassedlink = JSON.parse(data2).props.initialProps.pageProps.data.targeturl
+          res.end(JSON.stringify(output))
+        }
+      })
      } else {
 
 
