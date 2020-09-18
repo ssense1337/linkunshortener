@@ -308,13 +308,13 @@ failed = false;
   failed = true;
 }
 if(!failed) {
-  if(body.indexOf('<meta property="og:description" content="The page you are looking for cannot be found anywhere. Please try again or contact us for more info." />') == -1) {
+  if(body.indexOf('<div id="theGetLink" style="display: none">') != -1) {
   output.success = true;
   output.bypassedlink = body.substring(body.indexOf('<div id="theGetLink" style="display: none">')).substring(43,body.substring(body.indexOf('<div id="theGetLink" style="display: none">')).indexOf('</div>'));
   res.end(JSON.stringify(output))
   } else {
     output.success = false;
-    output.errormsg = "Sub2unlock link not found"
+    output.errormsg = "Couldnt retrieve bypassed link"
     res.end(JSON.stringify(output))
     failed = true;
   }
@@ -333,10 +333,18 @@ if(!failed) {
     output.errormsg = "This website is not supported"
     res.end(JSON.stringify(output))
   } else {
-    output.success = true;
-    output.type = "Misc Link"
-    output.bypassedlink = result;
-    res.end(JSON.stringify(output))
+
+    if(new URL(output.inputlink).hostname+new URL(output.inputlink).pathname != new URL(result).hostname+new URL(result).pathname) {
+      output.success = true;
+      output.type = "Misc Link"
+      output.bypassedlink = result;
+      res.end(JSON.stringify(output))
+    } else {
+      output.success = false;
+      output.errormsg = "Unexpected Error"
+      res.end(JSON.stringify(output))
+    }
+
   }
   
       
