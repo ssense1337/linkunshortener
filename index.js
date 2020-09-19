@@ -342,7 +342,7 @@ if(!failed) {
           res.end(JSON.stringify(output))
         }
       })
-     } else if(testregex(url11, "/boost\.ink/")) {
+     } else if(testregex(url11, "/boost\.ink|bst\.gg|bst\.wtf|booo\.st/")) {
 
       output.type = "boost.ink"
       var nav = function (source) {
