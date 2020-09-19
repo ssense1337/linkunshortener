@@ -342,6 +342,31 @@ if(!failed) {
           res.end(JSON.stringify(output))
         }
       })
+     } else if(testregex(url11, "/boost\.ink/")) {
+
+      output.type = "boost.ink"
+      var nav = function (source) {
+        var respom = source.match(/(lol|version)=["']([^"']+)["']/i);
+        if (respom) {
+          output.success = true;
+            output.bypassedlink = atob(respom[2]);;
+            res.end(JSON.stringify(output))
+        } else {
+          output.success = false;
+          output.errormsg = "Invalid Boost.ink link";
+          res.end(JSON.stringify(output))
+        }
+    };
+    request(url11, function (error, response, body) {
+      if(!error) {
+        nav(body);
+      } else {
+        output.success = false;
+        output.errormsg = "Cannot send request";
+        res.end(JSON.stringify(output))
+      }
+      
+    })
      } else {
 
 
