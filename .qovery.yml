@@ -3,6 +3,7 @@ application:
   name: "api"
   project: "First project"
   organization: "QoveryCommunity"
+  port: 3000
 routers:
 - name: "main-api"
   routes:
