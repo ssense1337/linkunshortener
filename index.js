@@ -99,7 +99,7 @@ app.get('/api', (req, res) => {
     }
     if (!dynamic) {
       console.log(url)
-      path = urlobj.pathname
+      path = "/" + urlobj.pathname.split("/")[1] + "/" + urlobj.pathname.split("/")[2];
       let o = { timestamp: new Date().getTime(), random: "6548307" }
 
       url1 = "https://publisher.linkvertise.com/api/v1/redirect/link/static" + path
@@ -128,7 +128,8 @@ app.get('/api', (req, res) => {
             o.link_id = json.body.data.link.id
 			o = { serial: btoa(JSON.stringify(o)) }
 
-            url1 = "https://publisher.linkvertise.com/api/v1/redirect/link" + path + "/target?X-Linkvertise-UT=" + json.body.user_token
+            let target_or_paste = json.body.data.link.target_type == 'PASTE' ?'paste' :(json.body.data.link.target_host == 'linkvertise.com' ?"paste" :"target")
+            url1 = "https://publisher.linkvertise.com/api/v1/redirect/link" + path + `/${target_or_paste}?X-Linkvertise-UT=` + json.body.user_token
             console.log(url1)
             request(url1, {
 			  method: 'POST',
@@ -142,8 +143,14 @@ app.get('/api', (req, res) => {
 
               //console.log(json.body)
 
-              if (json && json.body.data.target) {
+              if (json && json.body.data[target_or_paste]) {
 
+                if (target_or_paste == "paste") {
+                  output.success = true;
+                  output.bypassedlink = json.body.data.paste;
+                  return res.end(JSON.stringify(output))
+                }
+                
                 bypassedthink = json.body.data.target
                 bypassedobj = new URL(bypassedthink);
 
