@@ -182,7 +182,7 @@ app.get('/api', (req, res) => {
                 console.log(err)
               }
 
-              console.log(json.body)
+              // console.log(json.body)
 
               if (json && json.body.data[target_or_paste]) {
 
