@@ -100,7 +100,6 @@ app.get('/api', (req, res) => {
     if (!dynamic) {
       console.log(url)
       path = "/" + urlobj.pathname.split("/")[1] + "/" + urlobj.pathname.split("/")[2];
-      let o = { timestamp: new Date().getTime(), random: "6548307" }
 
       url1 = "https://publisher.linkvertise.com/api/v1/redirect/link/static" + path
 
@@ -125,11 +124,53 @@ app.get('/api', (req, res) => {
 
         try {
           if (json && json.body.data.link.id) {
-            o.link_id = json.body.data.link.id
-			o = { serial: btoa(JSON.stringify(o)) }
+            const link_id = json.body.data.link.id
+            const user_token = json.body.user_token
+            const target_or_paste = json.body.data.link.target_type == 'PASTE' ? 'paste' : (json.body.data.link.target_host == 'linkvertise.com' ? "paste" : "target")
+            request(`https://publisher.linkvertise.com/api/v1/redirect/link${path}/traffic-validation?X-Linkvertise-UT=${user_token}`,
+              {
+                method: "POST",
+                headers: {
+                  host: 'publisher.linkvertise.com',
+                  connection: 'keep-alive',
+                  'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"',
+                  accept: 'application/json',
+                  'content-type': 'application/json',
+                  'sec-ch-ua-mobile': '?0',
+                  'user-agent': 'Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36',
+                  'sec-ch-ua-platform': '"Windows"',
+                  origin: 'https://linkvertise.com',
+                  'sec-fetch-site': 'same-site',
+                  'sec-fetch-mode': 'cors',
+                  'sec-fetch-dest': 'empty',
+                  referer: 'https://linkvertise.com/',
+                  'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'
+                },
+                json: {
+                  "type": "cq",
+                  "token": 'R1kMBge9y6wO9rGzAG+Mdl3M9/61duUKUayHJ/wspxEcE1+sqMRWa70I4oMMp3H1La4=' //if this breaks then contact me :)
+                }
+              }, (err, json) => {
+                if (err) {
+                  output.success = false;
+                  output.errormsg = "Could not fetch data"
+                  return res.end(JSON.stringify(output))
+                }
 
-            let target_or_paste = json.body.data.link.target_type == 'PASTE' ?'paste' :(json.body.data.link.target_host == 'linkvertise.com' ?"paste" :"target")
-            url1 = "https://publisher.linkvertise.com/api/v1/redirect/link" + path + `/${target_or_paste}?X-Linkvertise-UT=` + json.body.user_token
+                if (json && json.body.data.tokens.TARGET) {
+                  const tokenn = json.body.data.tokens.TARGET
+                  if (!tokenn) {
+                    output.success = false;
+                    output.errormsg = "Could not get token"
+                    return res.end(JSON.stringify(output))
+                  }
+
+                  let o = { timestamp: new Date().getTime(), random: "6548307" }
+                  o.link_id = link_id
+
+			            o = { serial: btoa(JSON.stringify(o)), token: tokenn }
+
+            url1 = "https://publisher.linkvertise.com/api/v1/redirect/link" + path + `/${target_or_paste}?X-Linkvertise-UT=` + user_token
             console.log(url1)
             request(url1, {
 			  method: 'POST',
@@ -141,7 +182,7 @@ app.get('/api', (req, res) => {
                 console.log(err)
               }
 
-              //console.log(json.body)
+              console.log(json.body)
 
               if (json && json.body.data[target_or_paste]) {
 
@@ -176,6 +217,12 @@ app.get('/api', (req, res) => {
             })
 
           }
+          })
+         } else {
+          output.success = false;
+          output.errormsg = "No JSON data"
+          res.end(JSON.stringify(output))
+         }
         } catch {
           output.success = false;
           output.errormsg = "Invalid Linkvertise link. Could not fetch data"
