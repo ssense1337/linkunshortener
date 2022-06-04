@@ -127,97 +127,89 @@ app.get('/api', (req, res) => {
             const link_id = json.body.data.link.id
             const user_token = json.body.user_token
             const target_or_paste = json.body.data.link.target_type == 'PASTE' ? 'paste' : (json.body.data.link.target_host == 'linkvertise.com' ? "paste" : "target")
-            request(`https://publisher.linkvertise.com/api/v1/redirect/link${path}/traffic-validation?X-Linkvertise-UT=${user_token}`,
-              {
-                method: "POST",
-                headers: {
-                  host: 'publisher.linkvertise.com',
-                  connection: 'keep-alive',
-                  'sec-ch-ua': '" Not A;Brand";v="99", "Chromium";v="98", "Google Chrome";v="98"',
-                  accept: 'application/json',
-                  'content-type': 'application/json',
-                  'sec-ch-ua-mobile': '?0',
-                  'user-agent': 'Mozilla/5.0 (Linux; Android 11) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.120 Mobile Safari/537.36',
-                  'sec-ch-ua-platform': '"Windows"',
-                  origin: 'https://linkvertise.com',
-                  'sec-fetch-site': 'same-site',
-                  'sec-fetch-mode': 'cors',
-                  'sec-fetch-dest': 'empty',
-                  referer: 'https://linkvertise.com/',
-                  'accept-language': 'en-GB,en-US;q=0.9,en;q=0.8'
-                },
-                json: {
-                  "type": "cq",
-                  "token": 'R1kMBge9y6wO9rGzAG+Mdl3M9/61duUKUayHJ/wspxEcE1+sqMRWa70I4oMMp3H1La4=' //if this breaks then contact me :)
-                }
-              }, (err, json) => {
-                if (err) {
-                  output.success = false;
-                  output.errormsg = "Could not fetch data"
-                  return res.end(JSON.stringify(output))
-                }
+            request("https://paper.ostrichesica.com/ct?id=14473&url=" + encodeURIComponent(url11),
+              (err, resp) => {
+                const cheq_token = resp.body.split("\"jsonp\":\"")[1].split("\"")[0];
+                request(`https://publisher.linkvertise.com/api/v1/redirect/link${path}/traffic-validation?X-Linkvertise-UT=${user_token}`,
+                  {
+                    method: "POST",
+                    json: {
+                      "type": "cq",
+                      "token": cheq_token
+                    }
+                  }, (err, json) => {
+                    if (err) {
+                      output.success = false;
+                      output.errormsg = "Could not fetch data"
+                      return res.end(JSON.stringify(output))
+                    }
 
-                if (json && json.body.data.tokens.TARGET) {
-                  const tokenn = json.body.data.tokens.TARGET
-                  if (!tokenn) {
-                    output.success = false;
-                    output.errormsg = "Could not get token"
-                    return res.end(JSON.stringify(output))
-                  }
+                    if (json && json.body.data.tokens.TARGET) {
+                      const target_token = json.body.data.tokens.TARGET
+                      if (!target_token) {
+                        output.success = false;
+                        output.errormsg = "Could not get token"
+                        return res.end(JSON.stringify(output))
+                      }
 
-                  let o = { timestamp: new Date().getTime(), random: "6548307" }
-                  o.link_id = link_id
+                      let o = { timestamp: new Date().getTime(), random: "6548307" }
+                      o.link_id = link_id
 
-			            o = { serial: btoa(JSON.stringify(o)), token: tokenn }
+                      o = { serial: btoa(JSON.stringify(o)), token: target_token }
 
-            url1 = "https://publisher.linkvertise.com/api/v1/redirect/link" + path + `/${target_or_paste}?X-Linkvertise-UT=` + user_token
-            console.log(url1)
-            request(url1, {
-			  method: 'POST',
-              json: o,
-              headers: { "content-type": "application/json" }
-            }, (err, json) => {
+                      url1 = "https://publisher.linkvertise.com/api/v1/redirect/link" + path + `/${target_or_paste}?X-Linkvertise-UT=` + user_token
+                      console.log(url1)
+                      request(url1, {
+                        method: 'POST',
+                        json: o,
+                        headers: { "content-type": "application/json" }
+                      }, (err, json) => {
 
-              if (err) {
-                console.log(err)
-              }
+                        if (err) {
+                          console.log(err)
+                        }
 
-              // console.log(json.body)
+                        // console.log(json.body)
 
-              if (json && json.body.data[target_or_paste]) {
+                        if (json && json.body.data[target_or_paste]) {
 
-                if (target_or_paste == "paste") {
-                  output.success = true;
-                  output.bypassedlink = json.body.data.paste;
-                  return res.end(JSON.stringify(output))
-                }
-                
-                bypassedthink = json.body.data.target
-                bypassedobj = new URL(bypassedthink);
+                          if (target_or_paste == "paste") {
+                            output.success = true;
+                            output.bypassedlink = json.body.data.paste;
+                            return res.end(JSON.stringify(output))
+                          }
 
-                //console.log(json.body.data)
-                //console.log()
-                //console.log(bypassedobj)
-                //bypassed = bypassedobj.searchParams.get("k")
+                          bypassedthink = json.body.data.target
+                          bypassedobj = new URL(bypassedthink);
 
-                bypassed = bypassedobj.href
-                output.success = true;
-                output.bypassedlink = bypassed
-                res.end(JSON.stringify(output))
+                          //console.log(json.body.data)
+                          //console.log()
+                          //console.log(bypassedobj)
+                          //bypassed = bypassedobj.searchParams.get("k")
+
+                          bypassed = bypassedobj.href
+                          output.success = true;
+                          output.bypassedlink = bypassed
+                          res.end(JSON.stringify(output))
 
 
 
-              }
-              else if (json && !json.body.data.length) {
-                output.success = false;
-                output.errormsg = "No JSON data"
-                res.end(JSON.stringify(output))
-              }
+                        }
+                        else if (json && !json.body.data.length) {
+                          output.success = false;
+                          output.errormsg = "No JSON data"
+                          res.end(JSON.stringify(output))
+                        }
 
-            })
+                      })
 
-          }
-          })
+                    } else {
+                      output.success = false;
+                      output.errormsg = "No JSON data"
+                      res.end(JSON.stringify(output))
+                    }
+                  })
+              })
          } else {
           output.success = false;
           output.errormsg = "No JSON data"
