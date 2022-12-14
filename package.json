@@ -20,7 +20,7 @@
     "atob": "^2.1.2",
     "btoa": "^1.2.1",
     "expand-url": "^0.1.3",
-    "express": "^4.17.1",
+    "express": "^4.17.3",
     "node-bypasser": "^1.8.0",
     "request": "^2.88.2"
   }
